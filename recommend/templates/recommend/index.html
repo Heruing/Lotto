@@ -1,9 +1,60 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h1>로또</h1>
-  <a href="{% url 'recommend:refresh' %}"><button>Refresh</button></a>
-  {% for number in numbers %}
-    {{number}}
-  {% endfor %}
+  <div class="container">
+    <!-- 최근 당첨 내역 -->
+    <div class="d-flex justify-content-between">
+      <h2>최근 당첨 내역</h2>
+      <div class="btn-group">
+        <button class="btn btn-secondary dropdown-toggle m-2" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+          Pages
+        </button>
+        <ul class="dropdown-menu" style="height:30vh; overflow-y:scroll;">
+          {% for page in pages %}
+            <a class="dropdown-item" href="{% url 'recommend:index' page %}">{{page}}</a>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+    <table class="table table-dark table-striped">
+      <tr class="table-dark">
+        <th scope="col">회차</th>
+        <th scope="col">번호</th>
+        <th scope="col">추첨일</th>
+      </tr>
+      <tbody>
+        {% for number in numbers %}
+          <tr>
+            <th class="table-dark">{{number.drwNo}}</th>
+            <td class="table-dark">
+              <a style="text-decoration: none" href="{% url 'recommend:detail' number.drwtNo1 %}" class="ball">{{number.drwtNo1}} </a>
+              <a style="text-decoration: none" href="{% url 'recommend:detail' number.drwtNo2 %}" class="ball">{{number.drwtNo2}} </a>
+              <a style="text-decoration: none" href="{% url 'recommend:detail' number.drwtNo3 %}" class="ball">{{number.drwtNo3}} </a>
+              <a style="text-decoration: none" href="{% url 'recommend:detail' number.drwtNo4 %}" class="ball">{{number.drwtNo4}} </a>
+              <a style="text-decoration: none" href="{% url 'recommend:detail' number.drwtNo5 %}" class="ball">{{number.drwtNo5}} </a>
+              <a style="text-decoration: none" href="{% url 'recommend:detail' number.drwtNo6 %}" class="ball">{{number.drwtNo6}} </a>
+              +
+              <a style="text-decoration: none" href="{% url 'recommend:detail' number.bnusNo %}" class="ball">{{number.bnusNo}} </a>
+            </td>
+            <td class="table-dark">
+              {{number.drwNoDate}}
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    
+    <!---->
+    <h4>가장 자주 등장한 번호</h4>
+    {% for number in bestNumbers %}
+    <a style="text-decoration: none" href="{% url 'recommend:detail' number %}" class="ball">{{number}} </a>
+    {% endfor %}
+    <br>
+    <h4>가장 적게 등장한 번호</h4>
+    {% for number in worstNumbers %}
+    <a style="text-decoration: none" href="{% url 'recommend:detail' number %}" class="ball">{{number}} </a>
+    {% endfor %}
+
+
+  </div>
 {% endblock content %}
