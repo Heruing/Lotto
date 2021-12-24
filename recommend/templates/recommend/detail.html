@@ -1,9 +1,54 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <div class="container">
-    <h1>로또 {{num}}번 상세 정보</h1>
-    <p>당첨된 게임 수: {{numCount}}</p>
-    <p>당첨 확률: {{winRate}} %</p>
+  <div class="container box d-flex justify-content-center mt-3">
+    {% if  num < 10 %}
+      <div class="ball ball0 m-2">{{num}}</div>
+    {% elif num < 20%}
+      <div class="ball ball1 m-2">{{num}}</div>
+    {% elif num < 30%}
+      <div class="ball ball2 m-2">{{num}}</div>
+    {% elif num < 40%}
+      <div class="ball ball3 m-2">{{num}}</div>
+    {% else %}
+      <div class="ball ball4 m-2">{{num}}</div>
+    {% endif %}
+
+    <div style="width: 300px; text-align:left;">
+      <p>당첨된 전체 게임 수: {{numCount}}</p>
+      <p>총 당첨 확률: {{winRate}} %</p>
+      <p>최근 5회 이내 당첨 정보:<p>
+      <p>
+        {% if recentWin5 %}
+        {% for recentWin in recentWin5 %}
+          ▶{{recentWin.drwNo}}회
+        {% endfor %}
+        {% else %}
+        없음
+        {% endif %}
+      </p>
+      <p>최근 10회 이내 당첨 정보:</p>
+      <p>
+        {% if recentWin10 %}
+        {% for recentWin in recentWin10 %}
+          ▶{{recentWin.drwNo}}회
+        {% endfor %}
+        {% else %}
+        없음
+        {% endif %}
+      </p>
+      <p>마지막 당첨: {{lastWin}}회</p>
+      {% if winDis == 0 %}
+        <p>가장 최근 회차에 당첨된 번호입니다.</p>
+      {% else %}
+        <p>최근 당첨으로부터 {{winDis}}주째..</p>
+      {% endif %}
+    </div>
+
   </div>
+  <div class="m-3">
+    <a href="{% url 'recommend:index' 1 %}"><button class="btn btn-dark">Home</button></a>
+    <button id="go-back" class="btn btn-secondary">Back</button>
+  </div>
+
 {% endblock content %}

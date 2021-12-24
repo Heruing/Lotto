@@ -2,12 +2,15 @@ from django.shortcuts import redirect, render
 from  datetime import datetime
 from .models import Numbers
 import requests
+from django.db.models import Q
 
 
 numCounts = {}
-def refresh(request):
+numDates = {}
+def refresh():
     for i in range(1, 46):
         numCounts[i] = 0
+        numDates[i] = 0
     # 회차 계산
     now  = datetime.now()
     date_to_compare = datetime.strptime("20021207", "%Y%m%d")
@@ -24,38 +27,76 @@ def refresh(request):
         # 회차 초과시 중단
         if response['returnValue'] == 'fail': break
         Numbers.objects.create(**response)
+    
+    allNumbers = Numbers.objects.all()
     for n in range(1, 46):
-        numCounts[n] += Numbers.objects.filter(drwtNo1=n).count()
-        numCounts[n] += Numbers.objects.filter(drwtNo2=n).count()
-        numCounts[n] += Numbers.objects.filter(drwtNo3=n).count()
-        numCounts[n] += Numbers.objects.filter(drwtNo4=n).count()
-        numCounts[n] += Numbers.objects.filter(drwtNo5=n).count()
-        numCounts[n] += Numbers.objects.filter(drwtNo6=n).count()
-
+        filteredNum = allNumbers.filter(
+            Q(drwtNo1=n) | Q(drwtNo2=n) | Q(drwtNo3=n) | Q(drwtNo4=n) | Q(drwtNo5=n) | Q(drwtNo6=n) | Q(bnusNo=n)
+            )
+        numCounts[n] += filteredNum.count()
+        numDates[n] = filteredNum.order_by('-pk')[0].pk
+    return cnt
 
 def index(request, page=1):
-    refresh(request)
+    cnt = refresh()
     allThing = Numbers.objects.all()
-    numbers = allThing.order_by('-pk')[(page-1)*5:page*5]
+    allNumbers = allThing.order_by('-pk')[(page-1)*5:page*5]
+    numbers = [
+        {'drwNo':allNumbers[n].drwNo,
+        'drwNoDate':allNumbers[n].drwNoDate,
+        'nums': [
+            allNumbers[n].drwtNo1,
+            allNumbers[n].drwtNo2,
+            allNumbers[n].drwtNo3,
+            allNumbers[n].drwtNo4,
+            allNumbers[n].drwtNo5,
+            allNumbers[n].drwtNo6,
+            allNumbers[n].bnusNo
+            ]
+        }
+    for n in range(5)
+    ]
     pages = list(range(1, (allThing.count()+1)//5))
+    
     sortedNumbers = tuple(map(lambda x: x[0],sorted(numCounts.items(), key= lambda item: item[1])))
+    sortedNumDates = tuple(map(lambda x: (x[0], x[1], cnt-x[1]),sorted(numDates.items(), key= lambda item: item[1])))
+
     context= {
         'numbers':numbers,
         'pages': pages,
-        'bestNumbers': sortedNumbers[:6],
-        'worstNumbers': sortedNumbers[-6:],
+        'bestNumbers': reversed(sortedNumbers[-6:]),
+        'worstNumbers': sortedNumbers[:6],
+        'longNums': sortedNumDates[:5],
     }
     return render(request, 'recommend/index.html', context)
 
 def detail(request, num):
+    cnt = refresh()
     numCount = numCounts[num]
-    allThing = Numbers.objects.all()
-    allCount = allThing.count()
-    winRate = round(numCount / allCount, 5) * 100
+    allNumbers = Numbers.objects.all()
+    allCount = allNumbers.count()
+    winRate = round(numCount / allCount * 100, 2)
+    lastWin = numDates[num]
+    winDis =  cnt-lastWin
+    recentWin5 = allNumbers.order_by('-pk').filter(
+            Q(drwNo__gte=cnt-5) & (
+                Q(drwtNo1=num) | Q(drwtNo2=num) | Q(drwtNo3=num) | Q(drwtNo4=num) | Q(drwtNo5=num) | Q(drwtNo6=num) | Q(bnusNo=num)
+                )
+            )
+    recentWin10 = allNumbers.order_by('-pk').filter(
+            Q(drwNo__gte=cnt-10) & (
+                Q(drwtNo1=num) | Q(drwtNo2=num) | Q(drwtNo3=num) | Q(drwtNo4=num) | Q(drwtNo5=num) | Q(drwtNo6=num) | Q(bnusNo=num)
+                )
+            )
+
     context = {
         'num':num,
         'numCount': numCount,
         'allCount': allCount,
-        'winRate': winRate
+        'winRate': winRate,
+        'lastWin': lastWin,
+        'winDis': winDis,
+        'recentWin5': recentWin5,
+        'recentWin10': recentWin10,
     }
     return render(request, 'recommend/detail.html', context)

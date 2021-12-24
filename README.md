@@ -24,9 +24,13 @@
 2. 이를 바탕으로 원하는 방식의 추천 시스템을 만들어 제공합니다.
 
 <hr>
+
 ### 작업 내역
+
 
 - **<a href="./DAILY_WORK/DAY1">1일차</a>**
 - **<a href="./DAILY_WORK/DAY2">2일차</a>**
 - **<a href="./DAILY_WORK/DAY3">3일차</a>**
+- **<a href="./DAILY_WORK/DAY4">4일차</a>**
+- **<a href="./DAILY_WORK/DAY5">5일차</a>**
 
