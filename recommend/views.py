@@ -3,6 +3,7 @@ from  datetime import datetime
 from .models import Numbers
 import requests
 from django.db.models import Q
+from random import sample
 
 
 numCounts = {}
@@ -38,6 +39,7 @@ def refresh():
     return cnt
 
 def index(request, page=1):
+    now = datetime.today()
     cnt = refresh()
     allThing = Numbers.objects.all()
     allNumbers = allThing.order_by('-pk')[(page-1)*5:page*5]
@@ -60,6 +62,20 @@ def index(request, page=1):
     
     sortedNumbers = tuple(map(lambda x: x[0],sorted(numCounts.items(), key= lambda item: item[1])))
     sortedNumDates = tuple(map(lambda x: (x[0], x[1], cnt-x[1]),sorted(numDates.items(), key= lambda item: item[1])))
+    
+    sortedByDates = tuple(map(lambda x: x[0], sortedNumDates))
+
+    tmp = [0]*46
+    recommendNums = []
+    for n in range(45):
+        tmp[sortedByDates[n]] += 1
+        if tmp[sortedByDates[n]] == 2:
+            recommendNums.append(sortedByDates[n])
+        tmp[sortedNumbers[n]] += 1
+        if tmp[sortedNumbers[n]] == 2:
+            recommendNums.append(sortedNumbers[n])
+        
+
 
     context= {
         'numbers':numbers,
@@ -67,6 +83,9 @@ def index(request, page=1):
         'bestNumbers': reversed(sortedNumbers[-6:]),
         'worstNumbers': sortedNumbers[:6],
         'longNums': sortedNumDates[:5],
+        'recommendNums' : recommendNums[:10],
+        'cnt': cnt,
+        'now': now,
     }
     return render(request, 'recommend/index.html', context)
 
@@ -100,3 +119,56 @@ def detail(request, num):
         'recentWin10': recentWin10,
     }
     return render(request, 'recommend/detail.html', context)
+
+def numbers(request):
+    refresh()
+    sortedNumbers = tuple(map(lambda x: x[0],sorted(numCounts.items(), key= lambda item: item[1])))
+    sortedNumDates = tuple(map(lambda x: (x[0]),sorted(numDates.items(), key= lambda item: item[1])))
+    tmp = [0]*46
+    recommendNums = []
+
+    x = 0
+    for n in range(45):
+        tmp[sortedNumDates[n]] += 1
+        if tmp[sortedNumDates[n]] == 2:
+            recommendNums.append(sortedNumDates[n])
+            x += 1
+        tmp[sortedNumbers[n]] += 1
+        if tmp[sortedNumbers[n]] == 2:
+            recommendNums.append(sortedNumbers[n])
+            x += 1
+    
+    num10 = recommendNums[:10]
+    num20 = recommendNums[:20]
+    recommendNums = []
+    x = 0
+    while x < 5:
+        tmp = sample(num10, 6)
+        if not tmp in recommendNums:
+            recommendNums.append(tmp)
+            x += 1
+    
+    while x < 10:
+        tmp = sample(num20, 6)
+        if not tmp in recommendNums:
+            recommendNums.append(tmp)
+            x += 1
+
+
+    context = {
+        'recommendNums': recommendNums
+    }
+    return render(request, 'recommend/numbers.html', context)
+
+def random(request):
+    randomNums = []
+    x = 0
+    while x < 10:
+        tmp = sample(range(1, 46), 6)
+        if not tmp in randomNums:
+            randomNums.append(tmp)
+            x += 1
+    context = {
+        'randomNums':randomNums
+    }
+    return render(request, 'recommend/random.html', context)

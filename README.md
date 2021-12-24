@@ -32,5 +32,5 @@
 - **<a href="./DAILY_WORK/DAY2">2일차</a>**
 - **<a href="./DAILY_WORK/DAY3">3일차</a>**
 - **<a href="./DAILY_WORK/DAY4">4일차</a>**
-- **<a href="./DAILY_WORK/DAY5">5일차</a>**
+- **<a href="./DAILY_WORK/Finish">마무리</a>**
 

@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="container box">
+    <h1>랜덤 추천 목록</h1>
+    {% for numbers in randomNums %}
+      <p>
+        <span style="font-size: 28px;">{{forloop.counter}}.</span>
+        {% for num in numbers %}
+          {% if  num < 10 %}
+            <a style="text-decoration: none" href="{% url 'recommend:detail' num %}" class="ball ball0">{{num}} </a>
+          {% elif num < 20%}
+            <a style="text-decoration: none" href="{% url 'recommend:detail' num %}" class="ball ball1">{{num}} </a>
+          {% elif num < 30%}
+            <a style="text-decoration: none" href="{% url 'recommend:detail' num %}" class="ball ball2">{{num}} </a>
+          {% elif num < 40%}
+            <a style="text-decoration: none" href="{% url 'recommend:detail' num %}" class="ball ball3">{{num}} </a>
+          {% else %}
+            <a style="text-decoration: none" href="{% url 'recommend:detail' num %}" class="ball ball4">{{num}} </a>
+          {% endif %}
+        {% endfor %}
+      </p>
+    {% endfor %}
+  </div>
+  <div class="m-3">
+    <a href="{% url 'recommend:index' 1 %}"><button class="btn btn-dark">Home</button></a>
+    <button id="go-back" class="btn btn-secondary">Back</button>
+  </div>
+{% endblock content %}
