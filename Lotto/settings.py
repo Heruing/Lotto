@@ -25,10 +25,7 @@ SECRET_KEY = 'django-insecure-5zzh$dflxo*(jdv2sm+e#bjzt*xdrl5ke*z3nje2^e-gio*2uu
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [
-    '3.34.206.18',
-    'lotto-best.com',
-]
+ALLOWED_HOSTS = []
 
 
 # Application definition
