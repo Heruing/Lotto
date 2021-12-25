@@ -1,4 +1,12 @@
 # lotto
+
+
+## 배포완료
+
+- https://lotto-best.com/
+
+
+
 **간단 설명**
 
 해당 프로젝트는 로또 추천번호 생성 사이트를 만드는 사이트입니다.
@@ -32,5 +40,6 @@
 - **<a href="./DAILY_WORK/DAY2">2일차</a>**
 - **<a href="./DAILY_WORK/DAY3">3일차</a>**
 - **<a href="./DAILY_WORK/DAY4">4일차</a>**
-- **<a href="./DAILY_WORK/Finish">마무리</a>**
+- **<a href="./DAILY_WORK/Finish">마무리</a>**(배포)
+- (예정)광고 기능 추가 및 SEO
 
