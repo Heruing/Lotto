@@ -16,11 +16,12 @@
    ```bash
    sudo apt-get install git
    sudo apt install git
+   git --version
    ```
 
-   
+3. git 로그인
 
-3. 명령어 입력
+4. 명령어 입력
 
    ```bash
    $ apt-get install python3
