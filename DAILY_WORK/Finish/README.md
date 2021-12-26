@@ -4,6 +4,9 @@
 2.  배포
 
 <hr>
+## DEPLOY
+
+
 
 ## AWS Cloud9 Deploy
 
@@ -344,7 +347,7 @@ Cloud9의 환경이 정상적으로 생성됐다면, 다시 AWS 콘솔로 가서
 
    ```shell
    sudo systemctl restart nginx
-   systemctl status nginx.se
+   systemctl status nginx.service
    ```
 
    만약 80번 포트가 사용중이라면
@@ -402,7 +405,14 @@ Cloud9의 환경이 정상적으로 생성됐다면, 다시 AWS 콘솔로 가서
    $sudo systemctl restart gunicorn
    ```
 
-   
+> 상태 확인
+>
+> ```bash
+> $systemctl status nginx.service
+> $sudo systemctl status gunicorn.service
+> ```
+>
+> 
 
 3. setting.py 수정
 
