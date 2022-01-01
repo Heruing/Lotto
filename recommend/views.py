@@ -154,21 +154,16 @@ def numbers(request):
             recommendNums.append(tmp)
             x += 1
 
-
-    context = {
-        'recommendNums': recommendNums
-    }
-    return render(request, 'recommend/numbers.html', context)
-
-def random(request):
     randomNums = []
-    x = 0
-    while x < 10:
+    y = 0
+    while y < 10:
         tmp = sample(range(1, 46), 6)
         if not tmp in randomNums:
             randomNums.append(tmp)
-            x += 1
+            y += 1
+
     context = {
-        'randomNums':randomNums
+        'recommendNums': recommendNums,
+        'randomNums':randomNums,
     }
-    return render(request, 'recommend/random.html', context)
+    return render(request, 'recommend/numbers.html', context)
